@@ -30,14 +30,14 @@ Keys can be integers or strings, and the value can be either a simple data type 
 - In a programming language, variables can be thought of as keys, and their assigned values are the corresponding values.
 
 ### Usage
-Data Retrieval: Keys are used to quickly retrieve associated values from the collection.
-Data Storage: Key-value pairs provide a convenient way to organize and store data.
-Indexing: In databases and search algorithms, keys are often used to create indexes for faster lookup operations.
-Configuration: Key-value pairs are commonly used in configuration files to represent settings and their corresponding values.
+- For Data Retrieval: Keys are used to retrieve associated values from the collection.
+- For Data Storage: Key-value pairs provide a convenient way to organize and store data (and allow for *relationships* in tables).
+- For Indexing: In databases and search algorithms, keys are often used to create indexes for faster lookup operations.
+- For Configuration: Key-value pairs are commonly used in configuration files to represent settings and their corresponding values (YAML or JSON for example).
 
 ## Maps 
 
-Each key in a map must be unique, and the keys and values can be of any type that supports equality comparison. Maps are also known as *hash tables* or *dictionaries* in other programming languages.
+Each key in a map *must* be unique, and the keys and values can be of any type that supports equality comparison. Maps are also known as *hash tables* or *dictionaries* in other programming languages.
 
 There are three ways to declare a map in Go:
 
