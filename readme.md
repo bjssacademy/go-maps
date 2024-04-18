@@ -111,3 +111,41 @@ value, exists := m["e"]
 ```
 
 When you use the two-value assignment syntax, Go returns two values: the value associated with the key "e" in the map m, and a boolean indicating whether the key exists in the map (true if it does, false otherwise). This syntax allows you to check whether a key exists in the map before attempting to access its value. If the key "e" exists in the map, value will be assigned the corresponding value, and exists will be true. If the key "e" does not exist in the map, value will be assigned the zero value of its type, and exists will be false.
+
+## Tasks
+
+### Part 1
+
+Create a map that has a GUID for a key, and holds a struct of type Person for the value. There should be 5 people stored in the map, with unique DateOfBirth years.
+
+The Person struct should contain the following fields:
+- Name (string)
+- DateOfBirth (time.Time)
+- Email (string)
+
+Read more about the built-in package `time` and how Go uses dates and times: https://www.digitalocean.com/community/tutorials/how-to-use-dates-and-times-in-go
+
+You can use this package to create GUIDs: https://github.com/google/uuid
+
+Here is an example of how to use it:
+
+```go
+package main
+
+import (
+    "fmt"
+    "strings"
+    "github.com/google/uuid"
+)
+
+func main() {
+    uuidWithHyphen := uuid.New()
+    fmt.Println(uuidWithHyphen)
+    uuid := strings.Replace(uuidWithHyphen.String(), "-", "", -1)
+    fmt.Println(uuid)
+}
+```
+
+### Part 2
+
+Sort the map and return the oldest person's current age.
