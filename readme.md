@@ -112,6 +112,121 @@ value, exists := m["e"]
 
 When you use the two-value assignment syntax, Go returns two values: the value associated with the key "e" in the map m, and a boolean indicating whether the key exists in the map (true if it does, false otherwise). This syntax allows you to check whether a key exists in the map before attempting to access its value. If the key "e" exists in the map, value will be assigned the corresponding value, and exists will be true. If the key "e" does not exist in the map, value will be assigned the zero value of its type, and exists will be false.
 
+## Sorting a Map by Key or Value
+Maps are *unordered collections* in Go so there is no provision for sorting a map using the sort package. 
+
+From Go 1.12, you can print the map and it’ll be sorted by keys:
+
+```go
+func main() {
+	m := map[string]int{
+		"sally": 45,
+		"john":  5,
+		"marcy": 15,
+		"duff":  10,
+		"tom":   20,
+	}
+
+	fmt.Println(m) // map[duff:10 john:5 marcy:15 sally:45 tom:20]
+}
+```
+
+If you intend to do more than just printing the map or if you want to sort by value instead, then you'll need to do some work yourself. You can iterate over maps in Go but, unlike slices, the order of iteration is not guaranteed. 
+
+The idiomatic way to iterate over a map in Go is by using the `for..range` loop construct. Instead of receiving index/value pairs as with slices, you’ll get key/value pairs with maps. The iteration order is intentionally randomised when you use this technique.
+
+```go
+func main() {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+
+	for key, value := range m {
+		fmt.Println(key, "->", value)
+	}
+}
+```
+```
+output
+b -> 2
+c -> 3
+a -> 1
+```
+
+To guarantee a specific iteration order, you need to create some additional data structures and use a method from the sort package to control the order of iteration.
+
+```go
+func main() {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+
+	// Create a struct for each map key-value pair
+	// Make sure the types match accordingly
+	type KeyValue struct {
+		Key   string
+		Value int
+	}
+
+	// create an empty slice of key-value pairs
+	s := make([]KeyValue, 0, len(m))
+	// append all map keys-value pairs to the slice
+	for k, v := range m {
+		s = append(s, KeyValue{k, v})
+	}
+}
+```
+
+A `KeyValue` struct is used to hold the values for each map key-value pair. This struct is placed in a slice whose initial capacity is set to the length of the map in question. Now that we have a slice of `KeyValue` structs, we can use the `SortStable()` method from the sort package to sort the slice in any way we please. Once the slice is sorted accordingly, you can iterate over it to get the desired order.
+
+Here’s an example that sorts the slice of structs by value so that the slice is ordered in such a way that the greater numbers come before the lesser ones:
+
+```go
+func main() {
+	m := map[string]int{
+		"a": 1,
+		"b": 2,
+		"c": 3,
+	}
+
+	// Create a struct for each map key-value pair
+	// Make sure the types match accordingly
+	type KeyValue struct {
+		Key   string
+		Value int
+	}
+
+	// create an empty slice of key-value pairs
+	s := make([]KeyValue, 0, len(m))
+	// append all map keys-value pairs to the slice
+	for k, v := range m {
+		s = append(s, KeyValue{k, v})
+	}
+
+	// sort the slice of key-value pairs by value in descending order
+	sort.SliceStable(s, func(i, j int) bool {
+		return s[i].Value > s[j].Value
+	})
+
+	// iterate over the slice to get the desired order
+	for _, v := range s {
+		fmt.Println(v.Key, "->", v.Value)
+	}
+}
+```
+```
+output
+c -> 3
+b -> 2
+a -> 1
+```
+
+If you want to sort the map by key, you only need to change the function argument to `SliceStable()` so it sorts by the struct’s Key instead of Value.
+
 ## Tasks
 
 ### Part 1
